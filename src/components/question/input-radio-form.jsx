@@ -3,12 +3,6 @@ import { connect } from "react-redux";
 import { Radio, FormControlLabel } from "@mui/material";
 
 import "./question.styles.css";
-import {
-  getCorrectAnswerLeft,
-  getData,
-  getUSerCorrectAnswers,
-  getUSerWrongAnswers,
-} from "./getData";
 
 const STATUS = {
   CORRECT_ANSWER: "CORRECT_ANSWER",
@@ -29,22 +23,19 @@ const STATUS = {
 // console.log(filteredAnswersStored)
 
 const InputRadioForm = ({ index, answer, _id, disabled, filteredAnswers }) => {
-
   // const { userCorrectAnswers, userWrongAnswers, correctAnswerLeft } =
   // filteredAnswers;
-
-
 
   const [className, setClassName] = useState("wrap-question");
   const [checked, setChecked] = useState(false);
   const [answerStatus, setAnswerStatus] = useState(STATUS.OTHER);
 
   useEffect(() => {
-    // setTimeout(getData(), 3000);
 
-    const { userCorrectAnswers, userWrongAnswers, correctAnswerLeft } =
-  filteredAnswers;
-    
+    if(!Object.keys(filteredAnswers).length === 0){
+      const { userCorrectAnswers, userWrongAnswers, correctAnswerLeft } =
+      filteredAnswers;
+
     if (_id in userCorrectAnswers && userCorrectAnswers[_id] == index) {
       setClassName("wrap-question wrap-question-correct");
       setChecked(true);
@@ -60,6 +51,8 @@ const InputRadioForm = ({ index, answer, _id, disabled, filteredAnswers }) => {
       setClassName("wrap-question");
       setAnswerStatus(STATUS.OTHER);
     }
+    }
+    
   }, [filteredAnswers]);
 
   return (
