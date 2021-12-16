@@ -11,10 +11,10 @@ function* submitUserAnswers(payload) {
             answers: userAnswers
         });
         const result = data.data;
-        if(localStorage.getItem('wpr-result')){
-            localStorage.removeItem('wpr-result');
-        };
-        localStorage.setItem('wpr-result', JSON.stringify(result));
+        // if(localStorage.getItem('wpr-result')){
+        //     localStorage.removeItem('wpr-result');
+        // };
+        // yield localStorage.setItem('wpr-result', JSON.stringify(result));
         yield put(submitUserAnswersSuccess(result));
     }catch(error){
         yield put(submitUserAnswersFailure(error));

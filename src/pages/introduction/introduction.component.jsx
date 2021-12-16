@@ -11,9 +11,9 @@ const clearData = async () => {
   if (await localStorage.getItem("wpr-attempt")) {
     await localStorage.removeItem("wpr-attempt");
   }
-  if(await localStorage.getItem("wpr-result")){
-    await localStorage.removeItem("wpr-result");
-  }
+  // if(await localStorage.getItem("wpr-result")){
+  //   await localStorage.removeItem("wpr-result");
+  // }
   if(await localStorage.getItem("filtered-answers")){
     await localStorage.removeItem("filtered-answers")
   }

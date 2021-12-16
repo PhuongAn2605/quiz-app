@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { Radio, FormControlLabel } from "@mui/material";
 
 import "./question.styles.css";
+import {
+  getCorrectAnswerLeft,
+  getData,
+  getUSerCorrectAnswers,
+  getUSerWrongAnswers,
+} from "./getData";
 
 const STATUS = {
   CORRECT_ANSWER: "CORRECT_ANSWER",
@@ -10,35 +16,35 @@ const STATUS = {
   OTHER: "OTHER",
 };
 
-let filteredAnswersStored;
-let userCorrectAnswers;
-let userWrongAnswers;
-let correctAnswerLeft;
+// let filteredAnswersStored = {};
+// console.log(filteredAnswersStored)
 
-const getData = async () => {
-  filteredAnswersStored = await JSON.parse(
-    localStorage.getItem("filtered-answers")
-  );
-  // console.log(filteredAnswersStored)
+// const getStoredData = async () => {
+//   console.log('pending')
+//   filteredAnswersStored = await JSON.parse(
+//     localStorage.getItem("filtered-answers")
+//   );
+// }
+// getStoredData();
+// console.log(filteredAnswersStored)
 
-  userCorrectAnswers = filteredAnswersStored.userCorrectAnswers;
-  userWrongAnswers = filteredAnswersStored.userWrongAnswers;
-  correctAnswerLeft = filteredAnswersStored.correctAnswerLeft;
-};
+const InputRadioForm = ({ index, answer, _id, disabled, filteredAnswers }) => {
 
-const InputRadioForm = ({ index, answer, _id, disabled }) => { 
+  // const { userCorrectAnswers, userWrongAnswers, correctAnswerLeft } =
+  // filteredAnswers;
 
-  // let filteredAnswersStored;
-  // let userCorrectAnswers;
-  // let userWrongAnswers;
-  // let correctAnswerLeft;
+
 
   const [className, setClassName] = useState("wrap-question");
   const [checked, setChecked] = useState(false);
   const [answerStatus, setAnswerStatus] = useState(STATUS.OTHER);
 
-  useEffect(async () => {
-    await getData();
+  useEffect(() => {
+    // setTimeout(getData(), 3000);
+
+    const { userCorrectAnswers, userWrongAnswers, correctAnswerLeft } =
+  filteredAnswers;
+    
     if (_id in userCorrectAnswers && userCorrectAnswers[_id] == index) {
       setClassName("wrap-question wrap-question-correct");
       setChecked(true);
@@ -54,25 +60,25 @@ const InputRadioForm = ({ index, answer, _id, disabled }) => {
       setClassName("wrap-question");
       setAnswerStatus(STATUS.OTHER);
     }
-  }, []);
+  }, [filteredAnswers]);
 
   return (
     <div className="input-radio">
       <FormControlLabel
-      className={className}
-      key={index}
-      control={<Radio />}
-      label={answer}
-      value={index}
-      name={_id}
-      checked={checked}
-      disabled={disabled}
-    />
+        className={className}
+        key={index}
+        control={<Radio />}
+        label={answer}
+        value={index}
+        name={_id}
+        checked={checked}
+        disabled={disabled}
+      />
       {answerStatus == STATUS.CORRECT_ANSWER && (
-        <span class="span-answer">Correct answer</span>
+        <span className="span-answer">Correct answer</span>
       )}
       {answerStatus == STATUS.YOUR_ANSWER && (
-        <span class="span-answer">Your answer</span>
+        <span className="span-answer">Your answer</span>
       )}
     </div>
   );

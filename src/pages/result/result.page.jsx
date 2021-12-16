@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useMemo } from "react";
 import { connect } from "react-redux";
 
 import { Box, CircularProgress, Stack } from "@mui/material";
@@ -8,14 +8,40 @@ import ResultQuestion from "../../components/question/result-question.component"
 import { getResult } from "../../redux/user-answers/user-answers.actions";
 import ButtonSubmit from "../../components/button/button.component";
 
+
+
 const ResultPage = ({ getResult, result, questions, isLoading }) => {
-  useEffect(() => {
-    getResult();
-  }, []);
+  // useEffect(() => {
+  //   getResult();
+  // }, []);
+
+  // const filterAnswers = useMemo((result) => {
+  //   const { correctAnswers, answers } = result;
+  //   let userCorrectAnswers = {};
+  //   let userWrongAnswers = {};
+  
+  //   const correctAnswerLeft = { ...correctAnswers };
+  
+  //   for (let ans in answers) {
+  //     if (correctAnswers[ans] == answers[ans]) {
+  //       userCorrectAnswers[[ans]] = correctAnswers[ans];
+  //       delete correctAnswerLeft[[ans]];
+  //     } else {
+  //       userWrongAnswers[[ans]] = answers[ans];
+  //     }
+  //   }
+  //   const filteredAnswers = {
+  //     userCorrectAnswers,
+  //     userWrongAnswers,
+  //     correctAnswerLeft
+  //   }
+  //   localStorage.setItem('filtered-answers', JSON.stringify(filteredAnswers));
+  //   return filteredAnswers;
+  // }, [result]);
 
   const { correctAnswers, answers, score, scoreText } = result;
   //   console.log(correctAnswers);
-  //   console.log(answers)
+    // console.log(answers)
 
   return (
     <ArticleStyle>

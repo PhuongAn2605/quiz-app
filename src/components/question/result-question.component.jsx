@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Radio,
   RadioGroup,
@@ -10,11 +10,18 @@ import { connect } from "react-redux";
 
 import "./question.styles.css";
 import InputRadioForm from "./input-radio-form";
+import { getData, getUSerCorrectAnswers } from "./getData";
+import { getResult } from "../../redux/user-answers/user-answers.actions";
 
-
-
-const ResultQuestion = ({ question, length, index, filteredAnswers }) => {
+const ResultQuestion = ({
+  question,
+  length,
+  index,
+  result,
+  getResult,
+}) => {
   const { _id, answers, text } = question;
+  console.log(result);
 
   return (
     <FormControl component="fieldset" className="ques-form">
@@ -32,13 +39,11 @@ const ResultQuestion = ({ question, length, index, filteredAnswers }) => {
       >
         {answers.map((answer, index) => (
           <InputRadioForm
+            key={index}
             index={index}
             answer={answer}
             _id={_id}
             disable={true}
-            // userCorrectAnswers={userCorrectAnswers}
-            // userWrongAnswers={userWrongAnswers}
-            // correctAnswerLeft={correctAnswerLeft}
           />
         ))}
       </RadioGroup>
@@ -48,6 +53,11 @@ const ResultQuestion = ({ question, length, index, filteredAnswers }) => {
 
 const mapStateToProps = (state) => ({
   filteredAnswers: state.userAnswers.filteredAnswers,
+  result: state.userAnswers.result,
 });
 
-export default connect(mapStateToProps)(ResultQuestion);
+const mapDispatchToProps = (dispatch) => ({
+  getResult: () => dispatch(getResult()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResultQuestion);

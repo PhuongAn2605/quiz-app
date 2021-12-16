@@ -1,4 +1,4 @@
-export const filterAnswers = async (result) => {
+export const filterAnswers = (result) => {
   const { correctAnswers, answers } = result;
   let userCorrectAnswers = {};
   let userWrongAnswers = {};
@@ -18,9 +18,6 @@ export const filterAnswers = async (result) => {
     userWrongAnswers,
     correctAnswerLeft
   }
-  // if(await localStorage.getItem('filtered-answers')){
-  //   await localStorage.removeItem('filtered-answers');
-  // }
-  await localStorage.setItem('filtered-answers', JSON.stringify(filteredAnswers));
+  localStorage.setItem('filtered-answers', JSON.stringify(filteredAnswers));
   return filteredAnswers;
 };
