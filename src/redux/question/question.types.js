@@ -1,0 +1,7 @@
+const QuestionActionTypes = {
+    FETCH_QUESTIONS: 'FETCH_QUESTION',
+    FETCH_QUESTIONS_SUCCESS: 'FETCH_QUESTION_SUCCESS',
+    FETCH_QUESTIONS_FAILURE: 'FETCH_QUESTION_FAILURE'
+}
+
+export default QuestionActionTypes;
