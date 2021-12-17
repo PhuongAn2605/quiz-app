@@ -18,6 +18,7 @@ export function* fetchQuestionData() {
     //     yield localStorage.remove("wpr-attempt");
     //   }
       yield localStorage.setItem("wpr-attempt", JSON.stringify(attempt_data));
+      // yield localStorage.setItem("attempt_id", attempt_data._id);
   } catch (error) {
     yield put(fetchQuestionsFailure(error));
   }

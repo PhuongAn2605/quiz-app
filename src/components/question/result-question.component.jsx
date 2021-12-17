@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Radio,
   RadioGroup,
-  FormControlLabel,
   FormControl,
   FormLabel,
 } from "@mui/material";
@@ -10,18 +8,15 @@ import { connect } from "react-redux";
 
 import "./question.styles.css";
 import InputRadioForm from "./input-radio-form";
-import { getData, getUSerCorrectAnswers } from "./getData";
 import { getResult } from "../../redux/user-answers/user-answers.actions";
 
 const ResultQuestion = ({
   question,
   length,
-  index,
-  result,
-  getResult,
+  index
 }) => {
   const { _id, answers, text } = question;
-  console.log(result);
+  // console.log(result);
 
   return (
     <FormControl component="fieldset" className="ques-form">
@@ -35,7 +30,7 @@ const ResultQuestion = ({
       <RadioGroup
         aria-label={_id}
         name="radio-buttons-group"
-        style={{ width: "100%", margin: "auto", marginLeft: "10px" }}
+        style={{ width: "100%"}}
       >
         {answers.map((answer, index) => (
           <InputRadioForm
@@ -43,7 +38,7 @@ const ResultQuestion = ({
             index={index}
             answer={answer}
             _id={_id}
-            disable={true}
+            disabled={true}
           />
         ))}
       </RadioGroup>

@@ -1,29 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
-  Radio,
   RadioGroup,
-  FormControlLabel,
   FormControl,
   FormLabel,
 } from "@mui/material";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import './question.styles.css';
+import "./question.styles.css";
 import { addUserAnswer } from "../../redux/user-answers/user-answers.actions";
+import isEmpty from "is-empty";
+import InputRadioFormAttempt from "./input-radio-form-attempt";
 
-const AttemptQuestion = ({ question, length, index, addUserAnswer }) => {
+const AttemptQuestion = ({
+  userAnswers,
+  question,
+  length,
+  index,
+  addUserAnswer,
+}) => {
   const { _id, answers, text } = question;
-  const [checked, setChecked] = useState(false);
+  const [className, setClassName] = useState("wrap-question");
 
-    // console.log(userCorrectAnswers)
+  // const handleAddUserAnswer = (event) => {
+  //   addUserAnswer({
+  //     question_id: event.currentTarget.name,
+  //     answer: event.currentTarget.value,
+  //   });
+  // };
 
-  const handleAddUserAnswer = (event) => {
-    setChecked(!checked);
-    addUserAnswer({
-      question_id: event.currentTarget.name,
-      answer: event.currentTarget.value
-    });
-  }
+  let storedAnswers = {};
+  useEffect(() => {
+    if (isEmpty(userAnswers)) {
+      storedAnswers = JSON.parse(localStorage.getItem("user-answers"));
+      // setNewAttempt(false);
+    } else {
+      storedAnswers = { ...userAnswers };
+      // setNewAttempt(true);
+    }
+  }, [userAnswers]);
 
   return (
     <FormControl component="fieldset" className="ques-form">
@@ -37,29 +51,40 @@ const AttemptQuestion = ({ question, length, index, addUserAnswer }) => {
       <RadioGroup
         aria-label={_id}
         name="radio-buttons-group"
-        style={{ width: "100%", margin:"auto", marginLeft: "10px"}}
+        style={{ width: "100%" }}
       >
-        {answers.map((answer, index) => (
-          <FormControlLabel className="wrap-question"
-            key={index}
-            control={<Radio />}
-            label={answer}
-            value={index}
-            name={_id}
-            onChange={(e) => handleAddUserAnswer(e)}
-          ></FormControlLabel>
-        ))}
+        {answers.map((answer, index) => {
+          return (
+            // <FormControlLabel
+            //   className={className}
+            //   key={index}
+            //   control={<Radio />}
+            //   label={answer}
+            //   value={index}
+            //   name={_id}
+            //   // checked={checked}
+            //   onChange={(e) => handleAddUserAnswer(e)}
+            // ></FormControlLabel>
+            <InputRadioFormAttempt
+              key={index}
+              index={index}
+              answer={answer}
+              _id={_id}
+            />
+          );
+        })}
       </RadioGroup>
     </FormControl>
   );
 };
 
-const mapStateToProps = state => ({
-  filteredAnswers: state.userAnswers.filteredAnswers
-})
+const mapStateToProps = (state) => ({
+  filteredAnswers: state.userAnswers.filteredAnswers,
+  userAnswers: state.userAnswers.answers,
+});
 
-const mapDispatchToProps = dispatch => ({
-  addUserAnswer: (userAnswer) => dispatch(addUserAnswer(userAnswer))
+const mapDispatchToProps = (dispatch) => ({
+  addUserAnswer: (userAnswer) => dispatch(addUserAnswer(userAnswer)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AttemptQuestion);

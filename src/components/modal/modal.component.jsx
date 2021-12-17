@@ -6,7 +6,11 @@ import Modal from "@mui/material/Modal";
 
 import { connect } from "react-redux";
 import { closeModal } from "../../redux/modal/modal.actions";
-import { getResult, submitUserAnswersStart } from "../../redux/user-answers/user-answers.actions";
+import {
+  getResult,
+  submitUserAnswersStart,
+} from "../../redux/user-answers/user-answers.actions";
+import isEmpty from "is-empty";
 
 const style = {
   position: "absolute",
@@ -26,11 +30,17 @@ const ConfirmModal = ({
   answers,
   attempt_id,
   submitAnswers,
-  history
+  history,
 }) => {
   const handleSubmitAnswer = () => {
     closeModal();
-    submitAnswers(answers, attempt_id);
+    let id;
+    if(isEmpty(attempt_id) && localStorage.getItem('wpr-attempt')){
+      id = JSON.parse(localStorage.getItem('wpr-attempt'))._id;
+    }else{
+      id = attempt_id;
+    }
+    submitAnswers(answers, id);
 
     history.push("/result");
   };

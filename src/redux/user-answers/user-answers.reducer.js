@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   result: {},
   filteredAnswers: {},
   error: null,
-  isLoading: false
+  isLoading: false,
 };
 
 const userAnswerReducer = (state = INITIAL_STATE, action) => {
@@ -14,32 +14,32 @@ const userAnswerReducer = (state = INITIAL_STATE, action) => {
     case UserAnswerTypes.ADD_USER_ANSWER:
       const { question_id, answer } = action.payload;
       state.answers[question_id] = answer;
+      localStorage.setItem('user-answers', JSON.stringify(state.answers));
       return {
         ...state,
-        error: null
+        error: null,
       };
     case UserAnswerTypes.SUBMIT_USER_ANSWER_SUCCESS:
-    state.result = action.payload;
-    console.log(state.result)
+      state.result = action.payload;
 
       return {
         ...state,
         result: action.payload,
         filteredAnswers: filterAnswers(action.payload),
         isLoading: false,
-        error: null
+        error: null,
       };
     case UserAnswerTypes.SUBMIT_USER_ANSWER_FAILURE:
       return {
         ...state,
         isLoading: true,
-        error: action.payload
+        error: action.payload,
       };
     case UserAnswerTypes.GET_RESULT:
       // console.log('get result')
       return {
-        ...state
-      }
+        ...state,
+      };
     default:
       return state;
   }

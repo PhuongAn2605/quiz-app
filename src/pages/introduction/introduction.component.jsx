@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { connect } from "react-redux";
 
 import ButtonSubmit from "../../components/button/button.component";
@@ -7,25 +7,31 @@ import { AuthorStyle, FormStyle } from "./introduction.styles";
 import { ArticleStyle } from "../../utils/styles";
 import { fetchQuestions } from "../../redux/question/question.actions";
 
-const clearData = async () => {
-  if (await localStorage.getItem("wpr-attempt")) {
-    await localStorage.removeItem("wpr-attempt");
-  }
-  // if(await localStorage.getItem("wpr-result")){
-  //   await localStorage.removeItem("wpr-result");
-  // }
-  if(await localStorage.getItem("filtered-answers")){
-    await localStorage.removeItem("filtered-answers")
-  }
-}
+
 
 const IntroductionPage = ({ fetchQuestions }) => {
+
+  const clearData = useCallback(() => {
+    if (localStorage.getItem("wpr-attempt")) {
+      localStorage.removeItem("wpr-attempt");
+    }
+    if(localStorage.getItem("user-answers")){
+      localStorage.removeItem("user-answers");
+    }
+    if(localStorage.getItem("wpr-result")){
+      localStorage.removeItem("wpr-result");
+    }
+    if(localStorage.getItem("filtered-answers")){
+      localStorage.removeItem("filtered-answers")
+    }
+  }, []);
 
   useEffect(() => {
     fetchQuestions();
     clearData();
     
-  }, [])
+  }, []);
+
 
   return (
     <ArticleStyle>

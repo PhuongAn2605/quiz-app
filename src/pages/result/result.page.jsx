@@ -1,58 +1,75 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
 import { ArticleStyle } from "../../utils/styles";
 import ResultQuestion from "../../components/question/result-question.component";
 import { getResult } from "../../redux/user-answers/user-answers.actions";
 import ButtonSubmit from "../../components/button/button.component";
-
-
+import isEmpty from "is-empty";
 
 const ResultPage = ({ getResult, result, questions, isLoading }) => {
-  // useEffect(() => {
-  //   getResult();
-  // }, []);
+  useEffect(() => {
+    getResult();
+  }, []);
 
-  // const filterAnswers = useMemo((result) => {
-  //   const { correctAnswers, answers } = result;
-  //   let userCorrectAnswers = {};
-  //   let userWrongAnswers = {};
-  
-  //   const correctAnswerLeft = { ...correctAnswers };
-  
-  //   for (let ans in answers) {
-  //     if (correctAnswers[ans] == answers[ans]) {
-  //       userCorrectAnswers[[ans]] = correctAnswers[ans];
-  //       delete correctAnswerLeft[[ans]];
-  //     } else {
-  //       userWrongAnswers[[ans]] = answers[ans];
-  //     }
-  //   }
-  //   const filteredAnswers = {
-  //     userCorrectAnswers,
-  //     userWrongAnswers,
-  //     correctAnswerLeft
-  //   }
-  //   localStorage.setItem('filtered-answers', JSON.stringify(filteredAnswers));
-  //   return filteredAnswers;
-  // }, [result]);
+  let storedResult = {};
+  let storedQuestions = [];
 
-  const { correctAnswers, answers, score, scoreText } = result;
-  //   console.log(correctAnswers);
-    // console.log(answers)
+  let score = {};
+  let scoreText = {};
+  let length = 0;
+
+  const getStoredQuestions = useCallback(() => {
+    console.log(isEmpty(questions) + ' questions');
+    if (localStorage.getItem("wpr-attempt")) {
+      storedQuestions = JSON.parse(
+        localStorage.getItem("wpr-attempt")
+      ).questions;
+    } else{
+      storedQuestions = [ ...questions];
+    }
+    length = storedQuestions.length;
+
+  }, [questions, storedQuestions]);
+
+  const getStoredResult = useCallback(() => {
+    console.log(isEmpty(result) + ' result');
+    if (localStorage.getItem("wpr-result")) {
+      storedResult = JSON.parse(localStorage.getItem("wpr-result"));
+
+    } else{
+      storedResult = {...result};
+    }
+    score = storedResult.score;
+    scoreText = storedResult.scoreText;
+  }, [result, storedResult]);
+
+  getStoredQuestions();
+  getStoredResult();
 
   return (
     <ArticleStyle>
-      {isLoading && <Box sx={{ display: 'flex', justifyContent: "center" }}><CircularProgress /></Box>}
-      <section id="attempt_quiz">
-        <div id="show-question">
-          {questions.map((question, index) => (
-            <ResultQuestion key={index} index={index} question={question} />
-          ))}
-        </div>
-      </section>
+      {isLoading && (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <CircularProgress />
+        </Box>
+      )}
+      {!isLoading && (
+        <section id="attempt_quiz">
+          <div id="show-question">
+            {storedQuestions.map((question, index) => (
+              <ResultQuestion
+                key={index}
+                index={index}
+                question={question}
+                length={length}
+              />
+            ))}
+          </div>
+        </section>
+      )}
       <div className="form-result">
         <div>
           <h2>Result:</h2>
@@ -60,11 +77,7 @@ const ResultPage = ({ getResult, result, questions, isLoading }) => {
           <strong className="percent">{score * 10}</strong>
           <p className="message">{scoreText}</p>
         </div>
-        <ButtonSubmit
-            title="Try Again"
-            url="/"
-            button_id="start-quiz"
-          />
+        <ButtonSubmit title="Try Again" url="/" button_id="start-quiz" />
       </div>
     </ArticleStyle>
   );
@@ -73,7 +86,7 @@ const ResultPage = ({ getResult, result, questions, isLoading }) => {
 const mapStateToProps = (state) => ({
   result: state.userAnswers.result,
   questions: state.attempt.questions,
-  isLoading: state.userAnswers.isLoading
+  isLoading: state.userAnswers.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
